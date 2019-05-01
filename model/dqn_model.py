@@ -13,7 +13,7 @@ class Brain_DQN:
         self.gamma = 0.95 #discount rate
         self.epsilon = 1.0 #exploration rate
         self.epsilon_min = 0.0001
-        self.epsilon_decay = 1.0
+        self.epsilon_decay = 0.099
         self.learning_rate = 0.0001
         self.model = self._build_model()
 
