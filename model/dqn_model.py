@@ -57,11 +57,9 @@ class Brain_DQN:
 
         samples = random.sample(self.memory, batch_size)
         for sample in samples:
-            state, action, reward, new_state, done = sample
-            target = reward
-            if not done:
-                Q_future = max(self.model.predict(new_state)[0])
-                target = reward + Q_future * self.gamma
+            state, action, reward, new_state, _ = sample
+            Q_future = max(self.model.predict(new_state)[0])
+            target = reward + Q_future * self.gamma
             target_f = self.model.predict(state)
             target_f[0, action] = target
             self.model.fit(state, target_f, epochs=1, verbose=0)
