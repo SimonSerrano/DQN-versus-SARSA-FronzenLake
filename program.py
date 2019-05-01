@@ -20,7 +20,7 @@ def play_dqn(agent, env, args):
             state = next_state
             if done : 
                 if reward == 1 : wins +=1
-                agent.learn(args.batch_size)
+                agent.learn(args.batch_size[0])
                 break
     print("Games won :", wins, "on", args.episodes[0])
 
