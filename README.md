@@ -6,7 +6,7 @@ Study to compare the DQN (Q-learning) and SARSA learning  on the frozen lake gam
 - What did you want to study ?
 - What did you get as result?
 
-#Usage
+# Usage
 usage: program.py [-h] [--agent AGENT] [--episodes EPISODES] [--weights PATH]
                   [--batch BATCH_SIZE]
 
