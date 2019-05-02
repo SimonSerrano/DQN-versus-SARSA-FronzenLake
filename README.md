@@ -1,4 +1,4 @@
-# DQN-versurs-SARSA-FronzenLake
+# DQN-versus-SARSA-FronzenLake
 Study to compare the DQN (Q-learning) and SARSA learning  on the frozen lake game using gym (python)
 
 # Expected
