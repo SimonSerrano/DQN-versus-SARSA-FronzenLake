@@ -55,14 +55,14 @@ def main() :
     help="Specify to configure the path of the weights. If not specified, the weights are not loaded neither saved")
     parser.add_argument("--batch", "-b", dest="batch_size", nargs=1, type=int, default=[200],
     help="Specify this to configure the size of the batch when learning, default is 200")
-    parser.add_argument("--size", "-s", dest="map_size", nargs=1, type=int, default=8,
+    parser.add_argument("--size", "-s", dest="map_size", nargs=1, type=int, default=[8],
     help="Specify in order to change the map size, default is 8 (8x8 map)")
     args = parser.parse_args()
 
     from model import dqn_model, sarsa_model
 
-    map_frozenlake = frozen_lake.generate_random_map(size=args.map_size[0])
-    env = gym.make("FrozenLake-v0", desc=map_frozenlake)
+    
+    env = gym.make("FrozenLake-v0", map_name="8x8")
     #state_space = env.observation_space -> Discrete(64)
     #action_space = env.action_space -> Discrete(4)
     agent = dqn_model.Brain_DQN((1,), 4, args.map_size[0])

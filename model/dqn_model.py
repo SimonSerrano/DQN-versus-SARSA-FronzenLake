@@ -14,7 +14,7 @@ class Brain_DQN:
         self.epsilon = 1.0 #exploration rate
         self.epsilon_min = 0.0001
         self.epsilon_decay = 0.099
-        self.learning_rate = 0.0001
+        self.learning_rate = 0.01
         self.nb_neurons = nb_neurons
         self.model = self._build_model()
 
@@ -57,7 +57,9 @@ class Brain_DQN:
 
         samples = random.sample(self.memory, batch_size)
         for sample in samples:
-            state, action, reward, new_state, _ = sample
+            state, action, reward, new_state, done = sample
+            if done and reward == 0: reward = -1
+            if reward == 0: reward = 0.1
             Q_future = max(self.model.predict(new_state)[0])
             target = reward + Q_future * self.gamma
             target_f = self.model.predict(state)
