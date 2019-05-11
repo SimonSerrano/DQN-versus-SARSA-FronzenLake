@@ -6,7 +6,7 @@ from collections import deque
 import random
 
 class Brain_DQN:
-    def __init__(self, state_shape, action_size):
+    def __init__(self, state_shape, action_size, nb_neurons):
         self.state_shape = state_shape
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
@@ -15,14 +15,14 @@ class Brain_DQN:
         self.epsilon_min = 0.0001
         self.epsilon_decay = 0.099
         self.learning_rate = 0.0001
+        self.nb_neurons = nb_neurons
         self.model = self._build_model()
 
     def _build_model(self):
-        NB_NEURONS = 24
         #Define input
         inputs =Input(shape=self.state_shape)
         #Define hidden layers
-        x = Dense(NB_NEURONS, activation='relu')(inputs)
+        x = Dense(self.nb_neurons, activation='relu')(inputs)
 
         #Define output layer
         predictions = Dense(self.action_size, activation='softmax')(x)

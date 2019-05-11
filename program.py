@@ -2,6 +2,8 @@ import gym
 import numpy as np
 import os
 import argparse
+from gym.envs.toy_text import frozen_lake
+from math import pow
 
 
 
@@ -53,16 +55,19 @@ def main() :
     help="Specify to configure the path of the weights. If not specified, the weights are not loaded neither saved")
     parser.add_argument("--batch", "-b", dest="batch_size", nargs=1, type=int, default=[200],
     help="Specify this to configure the size of the batch when learning, default is 200")
+    parser.add_argument("--size", "-s", dest="map_size", nargs=1, type=int, default=8,
+    help="Specify in order to change the map size, default is 8 (8x8 map)")
     args = parser.parse_args()
 
     from model import dqn_model, sarsa_model
 
-    env = gym.make("FrozenLake-v0", map_name='8x8')
+    map_frozenlake = frozen_lake.generate_random_map(size=args.map_size[0])
+    env = gym.make("FrozenLake-v0", desc=map_frozenlake)
     #state_space = env.observation_space -> Discrete(64)
     #action_space = env.action_space -> Discrete(4)
-    agent = dqn_model.Brain_DQN((1,), 4)
+    agent = dqn_model.Brain_DQN((1,), 4, args.map_size[0])
     if args.agent[0] == "sarsa": 
-        agent = sarsa_model.Brain_SARSA(64, 4)
+        agent = sarsa_model.Brain_SARSA(pow(args.map_size[0], 2), 4)
     if args.path is not None and os.path.isfile(args.path[0]):
         agent.load(args.path[0])
     
