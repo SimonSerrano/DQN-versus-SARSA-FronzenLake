@@ -84,7 +84,7 @@ def main() :
     parser = argparse.ArgumentParser()
     parser.add_argument("--agent", "-a", dest="agent", nargs=1, type=str, default=["sarsa"],
     help="Specify to configure the agent to play the game : dqn, sarsa")
-    parser.add_argument("--episodes", "-e", dest="episodes", nargs=1, type= int, default=[2000000],
+    parser.add_argument("--episodes", "-e", dest="episodes", nargs=1, type= int, default=[1000000],
     help="Specify to configure the number of episodes, default is 200")
     parser.add_argument("--weights", "-w", dest="path", nargs=1, type=str,
     help="Specify to configure the path of the weights. If not specified, the weights are not loaded neither saved")
