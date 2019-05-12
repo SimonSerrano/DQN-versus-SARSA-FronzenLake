@@ -61,7 +61,8 @@ def play_sarsa(agent, env, args):
             action = next_action
 
         # decay epsilon
-        #agent.start_epsilon =agent.start_epsilon * agent.epsilon_decay
+        if rewards_avg[-1] > 0.3 :
+            agent.start_epsilon =agent.start_epsilon * agent.epsilon_decay
 
         if e % 5000 == 0:
 

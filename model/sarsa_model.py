@@ -8,9 +8,9 @@ class Brain_SARSA:
         self.state_shape = state_shape
         self.action_size = action_size
         self.gamma = 1 #discount rate
-        self.start_epsilon = 0.5#exploration rate
+        self.start_epsilon = 0.7#exploration rate
         self.epsilon_min = 0.0001
-        self.epsilon_decay = 0.999
+        self.epsilon_decay = 0.995
         self.learning_rate = 0.01
         self.model = self._build_model()
 
