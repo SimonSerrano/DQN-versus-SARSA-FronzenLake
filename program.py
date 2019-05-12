@@ -45,10 +45,7 @@ def play_sarsa(agent, env, args):
             next_state, reward, done,_ = env.step(action)
 
             if done :
-                if reward == 0:
-                    # Punishment for falling into a hall
-                    reward = 0
-                elif reward == 1:
+                if reward == 1:
                     wins +=1
 
 
