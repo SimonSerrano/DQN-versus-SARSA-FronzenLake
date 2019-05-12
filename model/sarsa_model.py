@@ -7,7 +7,7 @@ class Brain_SARSA:
     def __init__(self, state_shape, action_size):
         self.state_shape = state_shape
         self.action_size = action_size
-        self.gamma = 1 #discount rate
+        self.gamma = 0.99 #discount rate
         self.start_epsilon = 0.7#exploration rate
         self.epsilon_min = 0.0001
         self.epsilon_decay = 0.995
