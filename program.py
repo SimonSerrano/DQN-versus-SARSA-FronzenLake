@@ -10,7 +10,6 @@ from math import pow
 from model import dqn_model, sarsa_model
 
 
-
 def play_dqn(agent, env, args):
     wins = 0
     for e in range(args.episodes[0]):
