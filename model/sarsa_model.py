@@ -7,30 +7,38 @@ class Brain_SARSA:
     def __init__(self, state_shape, action_size):
         self.state_shape = state_shape
         self.action_size = action_size
-        self.gamma = 0.95 #discount rate
-        self.epsilon = 1.0 #exploration rate
+        self.gamma = 0.99 #discount rate
+        self.start_epsilon = 0.7#exploration rate
         self.epsilon_min = 0.0001
-        self.epsilon_decay = 1.0
-        self.learning_rate = 0.0001
+        self.epsilon_decay = 0.995
+        self.learning_rate = 0.01
         self.model = self._build_model()
 
     def _build_model(self):
-        model = np.zeros(shape=(self.state_shape, self.action_size))
+        model = np.ones(shape=(self.state_shape, self.action_size))
+
+        # model = np.random.ra([self.state_shape,self.action_size])
+
         return model
 
 
     def act(self, state):
-        self.epsilon *= self.epsilon_decay
-        self.epsilon = max(self.epsilon_min, self.epsilon)
-        if np.random.random() < self.epsilon:
-            return random.randrange(self.action_size)
+        #self.start_epsilon *= self.epsilon_decay
+        #self.start_epsilon = max(self.epsilon_min, self.start_epsilon)
+        if np.random.rand() < self.start_epsilon:
+            return np.random.randint(self.action_size)
+        return np.argmax(self.model[state, :])
+        #return max(list(range(self.action_size)), key=lambda x: self.model[(state, x)])
+
+    def best_action(self,state):
         return np.argmax(self.model[state, :])
 
 
+
     def learn(self, state, action, reward, new_state, next_action):
-            Q_future = self.model[new_state, next_action]
-            target = reward + Q_future * self.gamma
-            self.model[state, action] = self.model[state, action] + self.learning_rate * (target - self.model[state, action])
+            predict = self.model[state, action]
+            target = reward + self.gamma * self.model[new_state,next_action] - predict
+            self.model[state, action] = self.model[state, action] + self.learning_rate * target
 
 
     def load(self, name):

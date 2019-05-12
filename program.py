@@ -2,6 +2,9 @@ import gym
 import numpy as np
 import os
 import argparse
+import matplotlib.pyplot as plt
+import util
+import seaborn as sns
 from gym.envs.toy_text import frozen_lake
 from math import pow
 
@@ -10,6 +13,7 @@ map_16x16 = ['SFFHFFFHFHFFFHFF', 'FFFFFFHFHFFFFFFF', 'FFFHFHHFHFFHFFHF',
   'FFFFFHFFFHFFFFFH', 'HFHFFFFFFFHHFFFH', 'HFFFFFFFFHHFFFFF', 'HFFHFFHHFFFHHFFF',
    'HFFFHFFFFFHFFFFF', 'HFFFFFFFFHFFHFFF', 'FFFFFFFHHFFFFFFF', 'FFFHFHFHFFFFFFFF',
     'HFFFFHHHFFHFHFFG']
+from model import dqn_model, sarsa_model
 
 
 def play_dqn(agent, env, args):
@@ -32,28 +36,62 @@ def play_dqn(agent, env, args):
 
 
 def play_sarsa(agent, env, args):
+    max_step = 2000
     wins = 0
+    rewards = []
+    rewards_avg =[]
+
     for e in range(args.episodes[0]):
-        print("Starting episode : ", e)
+        #print("Starting episode : ", e)
+
         state = env.reset()
         action = agent.act(state)
-        for _ in range(10000):
-            env.render()
-            next_state, reward, done, _ = env.step(action)
+        for _ in range(max_step):
+            #env.render()
+            next_state, reward, done,_ = env.step(action)
+
+            if done :
+                if reward == 1:
+                    wins +=1
+
+
             next_action = agent.act(next_state)
             agent.learn(state, action, reward, next_state, next_action)
+            if done:
+                if reward < 0: reward =0
+                rewards.append(reward)
+
+                break
+
             state = next_state
             action = next_action
-            if done : 
-                if reward == 1 : wins +=1
-                break
-    print("Games won :", wins, "on", args.episodes[0])
+
+        # decay epsilon
+        if len(rewards_avg)>0 and rewards_avg[-1] > 0.3 :
+            agent.start_epsilon =agent.start_epsilon * agent.epsilon_decay
+
+        if e % 5000 == 0:
+
+            # report every 1000 steps, test 100 games to get avarage point score for statistics
+            rewards_avg.append(util.game_avg(agent,env,e))
+
+
+
+    print("Games  :", wins, "on", args.episodes[0])
+
+
+    util.scatter_plot(rewards_avg)
+    #util.cumm_plot(rewards)
+
+
+
+
 
 def main() :
     parser = argparse.ArgumentParser()
-    parser.add_argument("--agent", "-a", dest="agent", nargs=1, type=str, default=["dqn"], 
+    parser.add_argument("--agent", "-a", dest="agent", nargs=1, type=str, default=["sarsa"],
     help="Specify to configure the agent to play the game : dqn, sarsa")
-    parser.add_argument("--episodes", "-e", dest="episodes", nargs=1, type= int, default=[200], 
+    parser.add_argument("--episodes", "-e", dest="episodes", nargs=1, type= int, default=[1000000],
     help="Specify to configure the number of episodes, default is 200")
     parser.add_argument("--weights", "-w", dest="path", nargs=1, type=str,
     help="Specify to configure the path of the weights. If not specified, the weights are not loaded neither saved")
@@ -63,7 +101,6 @@ def main() :
     help="Specify in order to change the map size (8 or 16), default is 8 (8x8 map)")
     args = parser.parse_args()
 
-    from model import dqn_model, sarsa_model
 
     if args.map_size[0] == 16:
         env = gym.make("FrozenLake-v0", desc=map_16x16)
@@ -82,6 +119,7 @@ def main() :
     
     if args.agent[0] == "sarsa" :
         play_sarsa(agent, env, args)
+        agent.save("SARSA5HunderdThousand")
     if args.agent[0] == "dqn" :
         play_dqn(agent, env, args)
 
