@@ -5,7 +5,11 @@ import argparse
 from gym.envs.toy_text import frozen_lake
 from math import pow
 
-
+map_16x16 = ['SFFHFFFHFHFFFHFF', 'FFFFFFHFHFFFFFFF', 'FFFHFHHFHFFHFFHF',
+ 'FFHFFFFFFFFFFFFF', 'FFFHFFHFFFFFFFFF', 'FFFFHFHFFFFFFFFF', 'FFHFFHFFFFFFFFHF',
+  'FFFFFHFFFHFFFFFH', 'HFHFFFFFFFHHFFFH', 'HFFFFFFFFHHFFFFF', 'HFFHFFHHFFFHHFFF',
+   'HFFFHFFFFFHFFFFF', 'HFFFFFFFFHFFHFFF', 'FFFFFFFHHFFFFFFF', 'FFFHFHFHFFFFFFFF',
+    'HFFFFHHHFFHFHFFG']
 
 
 def play_dqn(agent, env, args):
@@ -56,13 +60,15 @@ def main() :
     parser.add_argument("--batch", "-b", dest="batch_size", nargs=1, type=int, default=[200],
     help="Specify this to configure the size of the batch when learning, default is 200")
     parser.add_argument("--size", "-s", dest="map_size", nargs=1, type=int, default=[8],
-    help="Specify in order to change the map size, default is 8 (8x8 map)")
+    help="Specify in order to change the map size (8 or 16), default is 8 (8x8 map)")
     args = parser.parse_args()
 
     from model import dqn_model, sarsa_model
 
-    
-    env = gym.make("FrozenLake-v0", map_name="8x8")
+    if args.map_size[0] == 16:
+        env = gym.make("FrozenLake-v0", desc=map_16x16)
+    else :
+        env = gym.make("FrozenLake-v0", map_name="8x8")
     #state_space = env.observation_space -> Discrete(64)
     #action_space = env.action_space -> Discrete(4)
     agent = dqn_model.Brain_DQN((1,), 4, args.map_size[0])

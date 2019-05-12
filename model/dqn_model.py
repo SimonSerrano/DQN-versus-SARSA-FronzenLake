@@ -13,7 +13,7 @@ class Brain_DQN:
         self.gamma = 0.95 #discount rate
         self.epsilon = 1.0 #exploration rate
         self.epsilon_min = 0.0001
-        self.epsilon_decay = 0.099
+        self.epsilon_decay = 0.99
         self.learning_rate = 0.01
         self.nb_neurons = nb_neurons
         self.model = self._build_model()
@@ -22,10 +22,12 @@ class Brain_DQN:
         #Define input
         inputs =Input(shape=self.state_shape)
         #Define hidden layers
-        x = Dense(self.nb_neurons, activation='relu')(inputs)
+        x = Dense(self.nb_neurons, activation='relu', kernel_initializer='random_uniform',
+                bias_initializer='zeros')(inputs)
 
         #Define output layer
-        predictions = Dense(self.action_size, activation='softmax')(x)
+        predictions = Dense(self.action_size, activation='softmax', kernel_initializer='random_uniform',
+                bias_initializer='zeros')(inputs)
 
         # Define a traning model
         model = Model(input=inputs, output=predictions)
@@ -59,7 +61,7 @@ class Brain_DQN:
         for sample in samples:
             state, action, reward, new_state, done = sample
             if done and reward == 0: reward = -1
-            if reward == 0: reward = 0.1
+            if reward == 0: reward = 1
             Q_future = max(self.model.predict(new_state)[0])
             target = reward + Q_future * self.gamma
             target_f = self.model.predict(state)
