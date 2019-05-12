@@ -7,7 +7,7 @@ import util
 import seaborn as sns
 from gym.envs.toy_text import frozen_lake
 from math import pow
-
+from model import dqn_model, sarsa_model
 
 
 
@@ -98,7 +98,7 @@ def main() :
     help="Specify in order to change the map size, default is 8 (8x8 map)")
     args = parser.parse_args()
 
-    from model import dqn_model, sarsa_model
+
 
 
     env = gym.make("FrozenLake-v0", map_name='8x8')
