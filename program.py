@@ -104,12 +104,12 @@ def main() :
     env = gym.make("FrozenLake-v0", map_name='8x8')
 
 
-    env = gym.make("FrozenLake-v0", map_name="8x8")
-    #state_space = env.observation_space -> Discrete(64)
-    #action_space = env.action_space -> Discrete(4)
-    agent = dqn_model.Brain_DQN((1,), 4, args.map_size[0])
+
+
     if args.agent[0] == "sarsa":
         agent = sarsa_model.Brain_SARSA(env.observation_space.n, env.action_space.n)
+    else:
+        agent = dqn_model.Brain_DQN((1,), 4, args.map_size[0])
 
     if args.path is not None and os.path.isfile(args.path[0]):
         agent.load(args.path[0])
